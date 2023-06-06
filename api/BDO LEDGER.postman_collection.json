@@ -1,0 +1,213 @@
+{
+	"info": {
+		"_postman_id": "83839abc-b50e-455a-9d50-cbb0dbe9d704",
+		"name": "BDO LEDGER",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23755073"
+	},
+	"item": [
+		{
+			"name": "list",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{link}}?access-token=access_token-developer",
+					"host": [
+						"{{link}}"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "12",
+							"disabled": true
+						},
+						{
+							"key": "access-token",
+							"value": "access_token-developer"
+						},
+						{
+							"key": "table",
+							"value": "logs",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "user",
+							"value": "0",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "date",
+							"value": "2023-06-01",
+							"type": "text"
+						},
+						{
+							"key": "remarks",
+							"value": "remarks",
+							"type": "text"
+						},
+						{
+							"key": "amount",
+							"value": "100.25",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{link}}?action=create&access-token=access_token-developer",
+					"host": [
+						"{{link}}"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "create"
+						},
+						{
+							"key": "access-token",
+							"value": "access_token-developer"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "user",
+							"value": "0",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "0",
+							"type": "text"
+						},
+						{
+							"key": "date",
+							"value": "2023-06-05",
+							"type": "text"
+						},
+						{
+							"key": "remarks",
+							"value": "ake the following two arrays you wish to search: <?php $fruit_array = array(\"apple\", \"pear\", \"orange\"); $fruit_array = array(\"a\" => \"apple\", \"b\" => \"pear\", \"c\" => \"orange\"); if ($i = array_search",
+							"type": "text"
+						},
+						{
+							"key": "amount",
+							"value": "50",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{link}}?action=update&access-token=access_token-developer&id=1",
+					"host": [
+						"{{link}}"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "update"
+						},
+						{
+							"key": "access-token",
+							"value": "access_token-developer"
+						},
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{link}}?action=delete&access-token=access_token-developer&id=1",
+					"host": [
+						"{{link}}"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "delete"
+						},
+						{
+							"key": "access-token",
+							"value": "access_token-developer"
+						},
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "link",
+			"value": "http://localhost/bdoledger/api/v2/Controller.php",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "link",
+			"value": "https://farmac.live/api/v2/Controller.php",
+			"type": "string"
+		}
+	]
+}
