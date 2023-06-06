@@ -87,9 +87,9 @@ const HomeScreen = ({ navigation, route }) => {
     getTransactions();
 
     return () => {
-      firebaseOff('transactions', (snapshot) => {
-        console.log('firebaseOff', snapshot);
-      });
+      // firebaseOff('transactions', (snapshot) => {
+      //   console.log('firebaseOff', snapshot);
+      // });
       setLoading(false);
     };
   }, []);
