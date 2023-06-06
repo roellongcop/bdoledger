@@ -18,7 +18,9 @@
     "@react-navigation/native-stack": "^6.9.12",
     "@reduxjs/toolkit": "^1.9.5",
     "expo": "~48.0.15",
+    "expo-device": "~5.2.1",
     "expo-status-bar": "~1.4.4",
+    "firebase": "^9.22.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.71.8",
@@ -29,8 +31,7 @@
     "react-native-web": "~0.18.10",
     "react-navigation": "^4.4.4",
     "react-navigation-stack": "^2.10.4",
-    "react-redux": "^8.0.5",
-    "expo-device": "~5.2.1"
+    "react-redux": "^8.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

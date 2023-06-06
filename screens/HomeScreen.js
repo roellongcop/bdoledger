@@ -12,6 +12,8 @@ import {
 import { storeData, getData } from "../lib/storage";
 import { apiGet } from "../lib/http";
 import { USERS, ANNABELLE, ROEL } from "../lib/constants";
+import { firebaseOff, firebaseSubscribe } from "../firebaseConfig";
+ 
 
 const HomeScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -74,10 +76,20 @@ const HomeScreen = ({ navigation, route }) => {
     });
   };
 
+  subscribeTransactions = () => {
+    firebaseSubscribe('transactions', (transactions) => {
+      console.log('transactions', transactions);
+    });
+  }
+
   useEffect(() => {
+    const subscribe = subscribeTransactions();
     getTransactions();
 
     return () => {
+      firebaseOff('transactions', (snapshot) => {
+        console.log('firebaseOff', snapshot);
+      });
       setLoading(false);
     };
   }, []);

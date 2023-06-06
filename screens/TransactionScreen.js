@@ -21,6 +21,7 @@ import { ADD, MINUS, ANNABELLE, ROEL, USERS, TYPES } from "../lib/constants";
 import * as Device from "expo-device";
 import LogComponent from "../components/LogComponent";
 import { apiGet } from "../lib/http";
+import { writeData } from "../firebaseConfig";
 
 const TransactionScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -209,13 +210,23 @@ const TransactionScreen = ({ navigation, route }) => {
       });
     } else {
       setLoading(true);
-      apiRequest(`?action=create`, {
+      writeData({
+        link: 'transactions',
         data,
-        success: apiSuccess,
-        error: apiError,
-        offline: offlineCallback,
-        invalidToken: invalidTokenCallback,
+        successCallback: (result) => {
+          setLoading(false);
+        },
+        errorCallback: (error) => {
+          setLoading(false);
+        },
       });
+      // apiRequest(`?action=create`, {
+      //   data,
+      //   success: apiSuccess,
+      //   error: apiError,
+      //   offline: offlineCallback,
+      //   invalidToken: invalidTokenCallback,
+      // });
     }
   };
 
