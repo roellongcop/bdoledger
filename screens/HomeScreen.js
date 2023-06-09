@@ -77,8 +77,8 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   subscribeTransactions = () => {
-    firebaseSubscribe('transactions', (transactions) => {
-      console.log('transactions', transactions);
+    firebaseSubscribe('transactions', (snapshot) => {
+      console.log('snapshot', snapshot);
     });
   }
 
@@ -87,9 +87,7 @@ const HomeScreen = ({ navigation, route }) => {
     getTransactions();
 
     return () => {
-      // firebaseOff('transactions', (snapshot) => {
-      //   console.log('firebaseOff', snapshot);
-      // });
+      
       setLoading(false);
     };
   }, []);
