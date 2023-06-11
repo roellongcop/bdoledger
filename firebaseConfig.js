@@ -1,7 +1,17 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getDatabase, ref, set, push, onValue, off } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  set,
+  get,
+  push,
+  onValue,
+  off,
+  remove,
+  update
+} from "firebase/database";
 // Optionally import the services that you want to use
 // import {...} from "firebase/auth";
 // import {...} from "firebase/database";
@@ -33,32 +43,91 @@ const database = getDatabase(app);
 
 const db = getDatabase();
 
-
-const writeData = ({ link, data, successCallback, errorCallback }) => {
+const pushData = ({ link, data, successCallback, errorCallback }) => {
   successCallback = successCallback || (() => {});
   errorCallback = errorCallback || (() => {});
 
   push(ref(db, link), data)
     .then((result) => {
-      console.log("Data successfully written to the database!", result);
       successCallback(result);
     })
     .catch((error) => {
-      console.error("Error writing data to the database:", error);
       errorCallback(error);
     });
 };
 
-const firebaseSubscribe = (link, callback = (() => {})) => {
+const readData = ({ link, successCallback, errorCallback }) => {
+  successCallback = successCallback || (() => {});
+  errorCallback = errorCallback || (() => {});
+
+  get(ref(db, link))
+    .then((snapshot) => {
+      successCallback(snapshot);
+    })
+    .catch((error) => {
+      errorCallback(error);
+    });
+};
+const setData = ({ link, data, successCallback, errorCallback }) => {
+  successCallback = successCallback || (() => {});
+  errorCallback = errorCallback || (() => {});
+
+  set(ref(db, link), data)
+    .then((snapshot) => {
+      successCallback(snapshot);
+    })
+    .catch((error) => {
+      errorCallback(error);
+    });
+};
+
+const updateData = ({ link, data, successCallback, errorCallback }) => {
+  successCallback = successCallback || (() => {});
+  errorCallback = errorCallback || (() => {});
+
+  update(ref(db, link), data)
+    .then((snapshot) => {
+      successCallback(snapshot);
+    })
+    .catch((error) => {
+      errorCallback(error);
+    });
+};
+
+const removeData = ({ link, successCallback, errorCallback }) => {
+  successCallback = successCallback || (() => {});
+  errorCallback = errorCallback || (() => {});
+
+  remove(ref(db, link))
+    .then((snapshot) => {
+      successCallback(snapshot);
+    })
+    .catch((error) => {
+      errorCallback(error);
+    });
+};
+
+const firebaseSubscribe = (link, callback = () => {}) => {
   onValue(ref(db, link), (snapshot) => {
     callback(snapshot);
   });
 };
 
-const firebaseOff = (linkRef, callback = (() => {})) => {
-  off(linkRef, (snapshot) => {
+const firebaseOff = (link, callback = () => {}) => {
+  off(ref(db, link), (snapshot) => {
     callback(snapshot);
-  })
+  });
 };
 
-export { app, database, writeData, firebaseSubscribe, firebaseOff };
+export {
+  app,
+  database,
+  pushData,
+  firebaseSubscribe,
+  firebaseOff,
+  setData,
+  removeData,
+  readData,
+  updateData,
+  firebaseConfig
+};

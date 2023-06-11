@@ -4,8 +4,9 @@ import globalStyles from "../styles/globalStyles";
 import { useNavigation } from "@react-navigation/native";
 import { IconButton } from "react-native-paper";
 import { USERS, TYPES } from "../lib/constants";
+import { timeAgo } from "../lib/date";
 
-const ItemComponent = React.memo(({ item }) => {
+const ItemComponent = React.memo(({ item, index, length }) => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
@@ -24,16 +25,15 @@ const ItemComponent = React.memo(({ item }) => {
       <View style={globalStyles.itemContainer}>
         <View style={globalStyles.itemColumn}>
           <View style={globalStyles.rowKey}>
-            <Text>{item.id})</Text>
-            <IconButton size={20} icon={USERS[item.user].icon} />
+            <Text>{length - index}) </Text>
             <Text style={globalStyles.user}>
               {USERS[item.user].label}
-              <Text style={{ color: "#bbb" }}> ({item.ago})</Text>
+              <Text style={{ color: "#bbb" }}> ({timeAgo(item.timestamp)})</Text>
             </Text>
           </View>
           <Text
             ellipsizeMode="tail"
-            numberOfLines={1}
+            numberOfLines={2}
             style={globalStyles.remarks}
           >
             {item.remarks}

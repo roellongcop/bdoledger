@@ -9,22 +9,14 @@ import {
   SegmentedButtons,
   IconButton,
 } from "react-native-paper";
-import { storeData, getData } from "../lib/storage";
-import { apiGet } from "../lib/http";
+import { storeData } from "../lib/storage";
 import { USERS, ANNABELLE, ROEL } from "../lib/constants";
-import { firebaseOff, firebaseSubscribe } from "../firebaseConfig";
- 
+import { firebaseSubscribe, readData } from "../firebaseConfig";
+import { ADD } from "../lib/constants";
 
 const HomeScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const {
-    transactions,
-    total,
-    totalAnnabelle,
-    totalRoel,
-    totalTransactions,
-    transactionsOffset,
-  } = useSelector((state) => state.TRANSACTION);
+  const { transactions } = useSelector((state) => state.TRANSACTION);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [segment, setSegment] = useState("All");
@@ -32,7 +24,10 @@ const HomeScreen = ({ navigation, route }) => {
   const [scrollDirection, setScrollDirection] = useState("up");
   const flatListRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [loadMoreLoading, setLoadMoreLoading] = useState(false);
+
+  const [total, setTotal] = useState(0);
+  const [totalAnnabelle, setTotalAnnabelle] = useState(0);
+  const [totalRoel, setTotalRoel] = useState(0);
 
   const scrollToOffset = (offset) => {
     if (flatListRef.current) {
@@ -40,63 +35,35 @@ const HomeScreen = ({ navigation, route }) => {
     }
   };
 
-  const getTransactions = () => {
-    setLoading(true);
-    apiGet("", {
-      success: (result) => {
-        const { status, data } = result;
-        if (status) {
-          dispatch({ type: "transaction/setTransactionState", payload: data });
-          storeData("transactions", data);
-        } else {
-          Alert.alert("Error!", data.message);
-        }
-        setLoading(false);
-      },
-      error: (error) => {
-        const { message } = error.data;
-        Alert.alert("Error!", message);
-        setLoading(false);
-      },
-      offline: (state) => {
-        getData("transactions").then((data) => {
-          if (data) {
-            dispatch({
-              type: "transaction/setTransactionState",
-              payload: data,
-            });
-          }
-          setLoading(false);
-        });
-      },
-      invalidToken: () => {
-        setLoading(false);
-        navigation.navigate("Settings", { screen: "Setting" });
-      },
-    });
+  subscribeTransactions = () => {
+    firebaseSubscribe("transactions", firebaseCallback);
   };
 
-  subscribeTransactions = () => {
-    firebaseSubscribe('transactions', (snapshot) => {
-      console.log('snapshot', snapshot);
-    });
-  }
-
   useEffect(() => {
-    const subscribe = subscribeTransactions();
-    getTransactions();
+    setLoading(true);
+
+    subscribeTransactions();
 
     return () => {
-      
       setLoading(false);
     };
   }, []);
 
   useEffect(() => {
+    let t = 0;
+    let tr = 0;
+    let ta = 0;
     const _filteredTransactions = transactions.filter((obj) => {
       const values = Object.values(obj).map((value) =>
         String(value).toLowerCase()
       );
+
+      t = obj.type == ADD ? t + obj.amount : t - obj.amount;
+      if (obj.user == ANNABELLE) {
+        ta = obj.type == ADD ? ta + obj.amount : ta - obj.amount;
+      } else {
+        tr = obj.type == ADD ? tr + obj.amount : tr - obj.amount;
+      }
 
       if (segment == "All") {
         return values.some((value) => value.includes(searchTerm.toLowerCase()));
@@ -107,15 +74,16 @@ const HomeScreen = ({ navigation, route }) => {
         obj.user == segment
       );
     });
+
+    setTotal(t);
+    setTotalAnnabelle(ta);
+    setTotalRoel(tr);
+
     setFilteredTransactions(_filteredTransactions);
   }, [searchTerm, transactions, segment]);
 
   const addForm = () => {
     navigation.navigate("Transaction", { action: "add" });
-  };
-
-  const changeSegment = (segment) => {
-    setSegment(segment);
   };
 
   const handleScroll = (event) => {
@@ -166,72 +134,51 @@ const HomeScreen = ({ navigation, route }) => {
     },
   ];
 
-  const loadMoreTransaction = () => {
-    setLoadMoreLoading(true);
-    apiGet(`?offset=${transactionsOffset}`, {
-      success: (result) => {
-        const { status, data } = result;
-        if (status) {
-          const newTransactions = [...transactions, ...data.transactions];
-          data.transactions = newTransactions;
-          dispatch({
-            type: "transaction/setTransactionState",
-            payload: data,
-          });
-          storeData("transactions", data);
-        } else {
-          Alert.alert("Error!", data.message);
-        }
-        setLoadMoreLoading(false);
-      },
-      error: (error) => {
-        const { message } = error.data;
-        Alert.alert("Error!", message);
-        setLoadMoreLoading(false);
-      },
-      offline: (state) => {
-        Alert.alert("No Internet!", "Please check internet connection");
-      },
-      invalidToken: () => {
-        setLoadMoreLoading(false);
-        navigation.navigate("Settings", { screen: "Setting" });
-      },
-    });
-  };
-
-  const renderFooter = () => {
-    return totalTransactions > transactionsOffset ? (
-      <Button loading={loadMoreLoading} onPress={loadMoreTransaction}>
-        Load More
-      </Button>
-    ) : null;
-  };
-
-  const buttonReloadTransaction = () => {
-    if (!transactions.length && !loading) {
-      return (
-        <Button
-          onPress={() => {
-            getTransactions();
-          }}
-        >
-          Reload Transactions
-        </Button>
-      );
-    }
-  };
-
   const recordsLabel = () => {
     if (filteredTransactions.length) {
       return (
         <Text style={{ marginBottom: 5 }}>
           Showing {filteredTransactions.length.toLocaleString()} out of{" "}
-          {totalTransactions.toLocaleString()} Records
+          {transactions.length.toLocaleString()} Records
         </Text>
       );
     }
 
     return <Text style={{ marginBottom: 5 }}>No records found</Text>;
+  };
+
+  const firebaseCallback = (snapshot) => {
+    if (snapshot) {
+      const obj = snapshot.val();
+      let data = [];
+      if (obj) {
+        data = Object.entries(obj).map(([key, value]) => ({ key, ...value }));
+        if (data) {
+          data.sort((a, b) => {
+            const dateA = new Date(a.date.split("/").reverse().join("-"));
+            const dateB = new Date(b.date.split("/").reverse().join("-"));
+            return dateB - dateA;
+          });
+        }
+      }
+
+      dispatch({ type: "transaction/setTransactions", payload: data });
+      storeData("transactions", data);
+    }
+
+    setLoading(false);
+  };
+
+  const onRefresh = () => {
+    setLoading(true);
+    readData({
+      link: "transactions",
+      successCallback: firebaseCallback,
+      errorCallback: (error) => {
+        setLoading(false);
+        Alert.alert("Error", JSON.stringify(error));
+      },
+    });
   };
 
   return (
@@ -272,26 +219,32 @@ const HomeScreen = ({ navigation, route }) => {
       <View style={{ marginBottom: 10 }}>
         <SegmentedButtons
           value={segment}
-          onValueChange={changeSegment}
+          onValueChange={(segment) => {
+            setSegment(segment);
+          }}
           buttons={segmentButtons}
         />
       </View>
 
       {recordsLabel()}
-      {buttonReloadTransaction()}
-      <FlatList
-        ref={flatListRef}
-        refreshing={loading}
-        onRefresh={() => {
-          getTransactions();
-        }}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        data={filteredTransactions}
-        renderItem={({ item }) => <ItemComponent item={item} />}
-        keyExtractor={(item) => item.id.toString()}
-        ListFooterComponent={renderFooter}
-      />
+      {
+        <FlatList
+          ref={flatListRef}
+          refreshing={loading}
+          onRefresh={onRefresh}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          data={filteredTransactions}
+          renderItem={({ item, index }) => (
+            <ItemComponent
+              item={item}
+              index={index}
+              length={filteredTransactions.length}
+            />
+          )}
+          keyExtractor={(item) => item.key}
+        />
+      }
 
       {scrollDirection == "down" && offset ? (
         <IconButton

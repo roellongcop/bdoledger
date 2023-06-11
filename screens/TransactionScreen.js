@@ -14,19 +14,34 @@ import { getCurrentDate } from "../lib/date";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useDispatch } from "react-redux";
 import { Button, SegmentedButtons } from "react-native-paper";
-import { apiRequest } from "../lib/http";
-import { convertDateFormat, convertToDate } from "../lib/date";
+import { convertToDate } from "../lib/date";
 import { storeData } from "../lib/storage";
-import { ADD, MINUS, ANNABELLE, ROEL, USERS, TYPES } from "../lib/constants";
+import {
+  ADD,
+  MINUS,
+  ANNABELLE,
+  ROEL,
+  USERS,
+  TYPES,
+  CREATE,
+  UPDATE,
+  DELETE,
+} from "../lib/constants";
 import * as Device from "expo-device";
 import LogComponent from "../components/LogComponent";
-import { apiGet } from "../lib/http";
-import { writeData } from "../firebaseConfig";
+import {
+  pushData,
+  removeData,
+  updateData,
+  firebaseSubscribe,
+  firebaseOff,
+readData,
+} from "../firebaseConfig";
 
 const TransactionScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { action, item } = route.params;
-  const [id, setId] = useState(0);
+  const [key, setKey] = useState("");
   const [amount, setAmount] = useState("");
   const [selectedUser, setSelectedUser] = useState(ANNABELLE);
   const [selectedProcess, setSelectedProcess] = useState(ADD);
@@ -41,18 +56,35 @@ const TransactionScreen = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshingLogs, setRefreshingLogs] = useState(false);
 
+  const firebaseCallback = (snapshot) => {
+    if (snapshot) {
+      const obj = snapshot.val();
+      let data = [];
+      if (obj) {
+        data = Object.entries(obj).map(([key, value]) => ({ key, ...value }));
+      }
+
+      setLogs(data);
+    }
+    setRefreshingLogs(false);
+  };
+
   const populateInputs = () => {
     if (action == "view") {
-      const { id, amount, date, remarks, type, user, logs } = item;
 
+      const { key, amount, date, remarks, type, user } = item;
+
+      setKey(key);
       setAmount(String(amount || ""));
-      setId(parseInt(id));
       setSelectedUser(parseInt(user));
       setSelectedProcess(parseInt(type));
       setRemarks(remarks);
       setDate(date);
-      setLogs(logs);
+      setLogs([]);
       setSelectedDate(convertToDate(date));
+
+
+      firebaseSubscribe(`logs/${key}`, firebaseCallback);
     }
   };
 
@@ -65,34 +97,23 @@ const TransactionScreen = ({ navigation, route }) => {
   };
 
   const onRefreshLogs = () => {
-    if (id) {
-      setRefreshingLogs(true);
-      apiGet(`?id=${id}`, {
-        success: (result) => {
-          const { status, data } = result;
-          if (status) {
-            const { logs } = data;
-            setLogs(logs);
-          } else {
-            Alert.alert("Error!", data.message);
-          }
-          setRefreshingLogs(false);
-        },
-        error: (error) => {
-          const { message } = error.data;
-          Alert.alert("Error!", message);
-          setRefreshingLogs(false);
-        },
-        invalidToken: () => {
-          setRefreshingLogs(false);
-          navigation.navigate("Settings", { screen: "Setting" });
-        },
-      });
-    }
+    setRefreshingLogs(true);
+    readData({
+      link: `logs/${key}`,
+      successCallback: firebaseCallback,
+      errorCallback: (error) => {
+        setRefreshingLogs(false);
+        Alert.alert("Error", JSON.stringify(error));
+      },
+    });
   };
 
   useEffect(() => {
     populateInputs();
+
+    return () => {
+      firebaseOff("transactions");
+    };
   }, []);
 
   const showDatePicker = () => {
@@ -117,36 +138,37 @@ const TransactionScreen = ({ navigation, route }) => {
     }
   };
 
-  const apiSuccess = (result) => {
-    const { status, data } = result;
-    if (status) {
-      const { transactions } = data;
-      dispatch({ type: "transaction/setTransactionState", payload: data });
-      storeData("transactions", transactions);
-      navigation.goBack();
-      // navigation.navigate("Home");
-    } else {
-      Alert.alert("Error!", data.message);
-    }
+  const getTransactionData = () => {
+    const timestamp = new Date().getTime();
+
+    return {
+      amount: parseFloat(amount),
+      user: selectedUser,
+      type: selectedProcess,
+      remarks,
+      date: date,
+      device: [Device.deviceName, Device.osBuildId].join(" - "),
+      timestamp,
+      createdAt: new Date(timestamp).toLocaleString(),
+    };
   };
 
-  const apiError = (error) => {
-    const { message } = error.data;
-    Alert.alert("Error!", message);
-    setLoading(false);
-    setDeleteLoading(false);
-  };
-
-  const offlineCallback = () => {
-    Alert.alert("No Internet!", "Please check internet connection");
-    setLoading(false);
-    setDeleteLoading(false);
-  };
-
-  const invalidTokenCallback = () => {
-    setLoading(false);
-    setDeleteLoading(false);
-    navigation.navigate("Settings", { screen: "Setting" });
+  const pushLog = (data, keyIdentifier = "") => {
+    keyIdentifier = keyIdentifier || key;
+    pushData({
+      link: `logs/${keyIdentifier}`,
+      data,
+      successCallback: (result) => {
+        setLoading(false);
+        setDeleteLoading(false);
+        navigation.navigate("Dashboard", { screen: "Home" });
+      },
+      errorCallback: (error) => {
+        setLoading(false);
+        setDeleteLoading(false);
+        Alert.alert("Error", JSON.stringify(error));
+      },
+    });
   };
 
   const deleteTransaction = () => {
@@ -161,14 +183,17 @@ const TransactionScreen = ({ navigation, route }) => {
         text: "Yes",
         onPress: () => {
           setDeleteLoading(true);
-          apiRequest(`?action=delete&id=${id}`, {
-            data: {
-              device: [Device.deviceName, Device.osBuildId].join(" - "),
+          removeData({
+            link: `transactions/${key}`,
+            successCallback: (result) => {
+              let data = getTransactionData();
+              data.actionType = DELETE;
+              pushLog(data);
             },
-            success: apiSuccess,
-            error: apiError,
-            offline: offlineCallback,
-            invalidToken: invalidTokenCallback,
+            errorCallback: (error) => {
+              setDeleteLoading(false);
+              Alert.alert("Error", JSON.stringify(error));
+            },
           });
         },
       },
@@ -190,43 +215,35 @@ const TransactionScreen = ({ navigation, route }) => {
       return;
     }
 
-    const data = {
-      amount: parseFloat(amount),
-      user: selectedUser,
-      type: selectedProcess,
-      remarks,
-      date: convertDateFormat(date),
-      device: [Device.deviceName, Device.osBuildId].join(" - "),
-    };
+    setLoading(true);
+    let data = getTransactionData();
 
     if (action == "view") {
-      setLoading(true);
-      apiRequest(`?action=update&id=${id}`, {
-        data,
-        success: apiSuccess,
-        error: apiError,
-        offline: offlineCallback,
-        invalidToken: invalidTokenCallback,
-      });
-    } else {
-      setLoading(true);
-      writeData({
-        link: 'transactions',
+      updateData({
+        link: `transactions/${key}`,
         data,
         successCallback: (result) => {
+          data.actionType = UPDATE;
+          pushLog(data);
+        },
+        errorCallback: (error) => {
+          Alert.alert("Error", JSON.stringify(error));
           setLoading(false);
+        },
+      });
+    } else {
+      pushData({
+        link: "transactions",
+        data,
+        successCallback: (result) => {
+          data.actionType = CREATE;
+          pushLog(data, result.key);
         },
         errorCallback: (error) => {
           setLoading(false);
+          Alert.alert("Error", JSON.stringify(error));
         },
       });
-      // apiRequest(`?action=create`, {
-      //   data,
-      //   success: apiSuccess,
-      //   error: apiError,
-      //   offline: offlineCallback,
-      //   invalidToken: invalidTokenCallback,
-      // });
     }
   };
 
@@ -253,7 +270,7 @@ const TransactionScreen = ({ navigation, route }) => {
           }
         >
           {logs.map((item, index) => (
-            <LogComponent key={item.id} item={item} index={index} />
+            <LogComponent key={item.key} item={item} index={index} />
           ))}
         </ScrollView>
       </>

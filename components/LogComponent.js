@@ -2,11 +2,11 @@ import React from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import globalStyles from "../styles/globalStyles";
 import { Badge } from "react-native-paper";
-import { ACTIONS } from "../lib/constants";
-import { useNavigation } from "@react-navigation/native";
+import { ACTIONS, USERS } from "../lib/constants";
+import { timeAgo } from "../lib/date";
+import { TYPES } from "../lib/constants";
 
 const LogComponent = React.memo(({ item, index }) => {
-  const navigation = useNavigation();
 
   const onPress = () => {
 
@@ -20,25 +20,25 @@ const LogComponent = React.memo(({ item, index }) => {
             <Text style={{ color: "#555", fontWeight: "bold" }}>
               {item.createdAt}
             </Text>
-            <Text style={{ color: "#999" }}> ({item.ago})</Text>
+            <Text style={{ color: "#999" }}> ({timeAgo(item.timestamp)})</Text>
           </View>
           <Badge
             size={20}
             style={{
-              backgroundColor: ACTIONS[item.action_type].color,
+              backgroundColor: ACTIONS[item.actionType].color,
               color: "#fff",
               paddingLeft: 7,
               paddingRight: 7,
             }}
           >
             <Text style={{ color: "#fff" }}>
-              {ACTIONS[item.action_type].label}
+              {ACTIONS[item.actionType].label}
             </Text>
           </Badge>
         </View>
 
         <Text style={{ color: "#999", marginTop: 5 }}>
-          Transaction #: {item.transaction_id}
+          Transaction #: {item.key}
         </Text>
         <Text style={{ color: "#999" }}>Device: {item.device}</Text>
         <Text style={{ marginTop: 10, fontWeight: "bold", color: "#999" }}>
@@ -54,7 +54,11 @@ const LogComponent = React.memo(({ item, index }) => {
             },
           ]}
         >
-          {item.remarks}
+          {'User:' + USERS[item.user].label + "\n"}
+          {'Action:' + TYPES[item.type].label + "\n"}
+          {'Amount:' + item.amount + "\n"}
+          {'Date:' + item.date + "\n"}
+          {'Remarks:' + item.remarks + "\n"}
         </Text>
       </View>
     </TouchableOpacity>
