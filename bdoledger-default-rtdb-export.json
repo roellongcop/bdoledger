@@ -1,0 +1,256 @@
+{
+  "logs": {
+    "-NXiUUeZgtE88wKe9OMQ": {
+      "-NXiUUhlFxBP00MVFbk_": {
+        "actionType": 0,
+        "amount": 2000,
+        "createdAt": "6/12/2023, 3:24:31 PM",
+        "date": "05/15/2023",
+        "device": "OPPO F11 - CPH1911_11_F.20",
+        "email": "longcoproel@gmail.com",
+        "remarks": "Initial Deposit",
+        "timestamp": 1684143221000,
+        "type": 0,
+        "user": 0
+      }
+    },
+    "-NXiUk34VEEzuMesuM3A": {
+      "-NXiUkAkzDiVskYnDHSS": {
+        "actionType": 0,
+        "amount": 2000,
+        "createdAt": "6/12/2023, 3:25:38 PM",
+        "date": "05/26/2023",
+        "device": "OPPO F11 - CPH1911_11_F.20",
+        "email": "longcoproel@gmail.com",
+        "remarks": "utang ko kay mahals na 16k bawasan ko ng 2k para 14k nalng",
+        "timestamp": 1685093686000,
+        "type": 0,
+        "user": 0
+      }
+    },
+    "-NXiUonCSa9oaeXyxOaJ": {
+      "-NXiUorBHwlsfRyzPAKZ": {
+        "actionType": 0,
+        "amount": 3000,
+        "createdAt": "6/12/2023, 3:25:57 PM",
+        "date": "05/26/2023",
+        "device": "OPPO F11 - CPH1911_11_F.20",
+        "email": "longcoproel@gmail.com",
+        "remarks": "Money Deposit",
+        "timestamp": 1685093707000,
+        "type": 0,
+        "user": 1
+      }
+    },
+    "-NXiVL-oF-mJFrQAHv59": {
+      "-NXiVL4enKdE53uD-u4X": {
+        "actionType": 0,
+        "amount": 300,
+        "createdAt": "6/12/2023, 3:28:13 PM",
+        "date": "05/31/2023",
+        "device": "OPPO F11 - CPH1911_11_F.20",
+        "email": "longcoproel@gmail.com",
+        "remarks": "nakalimutan nya wallet nya",
+        "timestamp": 1685525925000,
+        "type": 1,
+        "user": 0
+      }
+    },
+    "-NXiVVUXwZHBGamQGScR": {
+      "-NXiVVZnIeoGMWVXLWYA": {
+        "actionType": 0,
+        "amount": 500,
+        "createdAt": "6/12/2023, 3:28:56 PM",
+        "date": "06/05/2023",
+        "device": "OPPO F11 - CPH1911_11_F.20",
+        "email": "longcoproel@gmail.com",
+        "remarks": "Money Deposit: wiwidrahin nya din pinalagay lang",
+        "timestamp": 1685979176000,
+        "type": 0,
+        "user": 0
+      }
+    },
+    "-NXiVqrEYfTicpmxzec6": {
+      "-NXiVqwtNLtHVUXh8N2D": {
+        "actionType": 0,
+        "amount": 1500,
+        "createdAt": "6/12/2023, 3:30:28 PM",
+        "date": "06/05/2023",
+        "device": "OPPO F11 - CPH1911_11_F.20",
+        "email": "longcoproel@gmail.com",
+        "remarks": "500 kay lits 1k kay mama wer",
+        "timestamp": 1685981370000,
+        "type": 1,
+        "user": 0
+      }
+    },
+    "-NXiW2__cVG5SpxnERTa": {
+      "-NXiW2fMYVzkrS5SOSmX": {
+        "actionType": 0,
+        "amount": 5000,
+        "createdAt": "6/12/2023, 3:31:20 PM",
+        "date": "06/05/2023",
+        "device": "OPPO F11 - CPH1911_11_F.20",
+        "email": "longcoproel@gmail.com",
+        "remarks": "Pang laboratory ni erpats",
+        "timestamp": 1685981390000,
+        "type": 1,
+        "user": 1
+      }
+    },
+    "-NXiW9Rg09hNvW8kprFU": {
+      "-NXiW9YFfbmTkG3Q3V09": {
+        "actionType": 0,
+        "amount": 500,
+        "createdAt": "6/12/2023, 3:31:48 PM",
+        "date": "06/06/2023",
+        "device": "OPPO F11 - CPH1911_11_F.20",
+        "email": "longcoproel@gmail.com",
+        "remarks": "widraw sa munti pinaglain sa LAVAS",
+        "timestamp": 1686189045000,
+        "type": 1,
+        "user": 1
+      }
+    },
+    "-NXiWHiCfDtyC9xRMjOB": {
+      "-NXiWHoy05gGlk0ZexHT": {
+        "actionType": 0,
+        "amount": 1000,
+        "createdAt": "6/12/2023, 3:32:22 PM",
+        "date": "06/10/2023",
+        "device": "OPPO F11 - CPH1911_11_F.20",
+        "email": "longcoproel@gmail.com",
+        "remarks": "1k na utang para kay mama wer",
+        "timestamp": 1686389147000,
+        "type": 0,
+        "user": 0
+      }
+    },
+    "-NXiWKq0OwYKtqnxjua2": {
+      "-NXiWKv8Xf_4W8u3xn6R": {
+        "actionType": 0,
+        "amount": 4500,
+        "createdAt": "6/12/2023, 3:32:35 PM",
+        "date": "06/10/2023",
+        "device": "OPPO F11 - CPH1911_11_F.20",
+        "email": "longcoproel@gmail.com",
+        "remarks": "Money Deposit",
+        "timestamp": 1686389165000,
+        "type": 0,
+        "user": 1
+      }
+    }
+  },
+  "transactions": {
+    "-NXiUUeZgtE88wKe9OMQ": {
+      "amount": 2000,
+      "createdAt": "6/12/2023, 3:24:31 PM",
+      "date": "05/15/2023",
+      "device": "OPPO F11 - CPH1911_11_F.20",
+      "email": "longcoproel@gmail.com",
+      "remarks": "Initial Deposit",
+      "timestamp": 1684143221000,
+      "type": 0,
+      "user": 0
+    },
+    "-NXiUk34VEEzuMesuM3A": {
+      "amount": 2000,
+      "createdAt": "6/12/2023, 3:25:38 PM",
+      "date": "05/26/2023",
+      "device": "OPPO F11 - CPH1911_11_F.20",
+      "email": "longcoproel@gmail.com",
+      "remarks": "utang ko kay mahals na 16k bawasan ko ng 2k para 14k nalng",
+      "timestamp": 1685093686000,
+      "type": 0,
+      "user": 0
+    },
+    "-NXiUonCSa9oaeXyxOaJ": {
+      "amount": 3000,
+      "createdAt": "6/12/2023, 3:25:57 PM",
+      "date": "05/26/2023",
+      "device": "OPPO F11 - CPH1911_11_F.20",
+      "email": "longcoproel@gmail.com",
+      "remarks": "Money Deposit",
+      "timestamp": 1685093707000,
+      "type": 0,
+      "user": 1
+    },
+    "-NXiVL-oF-mJFrQAHv59": {
+      "amount": 300,
+      "createdAt": "6/12/2023, 3:28:13 PM",
+      "date": "05/31/2023",
+      "device": "OPPO F11 - CPH1911_11_F.20",
+      "email": "longcoproel@gmail.com",
+      "remarks": "nakalimutan nya wallet nya",
+      "timestamp": 1685525925000,
+      "type": 1,
+      "user": 0
+    },
+    "-NXiVVUXwZHBGamQGScR": {
+      "amount": 500,
+      "createdAt": "6/12/2023, 3:28:56 PM",
+      "date": "06/05/2023",
+      "device": "OPPO F11 - CPH1911_11_F.20",
+      "email": "longcoproel@gmail.com",
+      "remarks": "Money Deposit: wiwidrahin nya din pinalagay lang",
+      "timestamp": 1685979176000,
+      "type": 0,
+      "user": 0
+    },
+    "-NXiVqrEYfTicpmxzec6": {
+      "amount": 1500,
+      "createdAt": "6/12/2023, 3:30:28 PM",
+      "date": "06/05/2023",
+      "device": "OPPO F11 - CPH1911_11_F.20",
+      "email": "longcoproel@gmail.com",
+      "remarks": "500 kay lits 1k kay mama wer",
+      "timestamp": 1685981370000,
+      "type": 1,
+      "user": 0
+    },
+    "-NXiW2__cVG5SpxnERTa": {
+      "amount": 5000,
+      "createdAt": "6/12/2023, 3:31:20 PM",
+      "date": "06/05/2023",
+      "device": "OPPO F11 - CPH1911_11_F.20",
+      "email": "longcoproel@gmail.com",
+      "remarks": "Pang laboratory ni erpats",
+      "timestamp": 1685981390000,
+      "type": 1,
+      "user": 1
+    },
+    "-NXiW9Rg09hNvW8kprFU": {
+      "amount": 500,
+      "createdAt": "6/12/2023, 3:31:48 PM",
+      "date": "06/06/2023",
+      "device": "OPPO F11 - CPH1911_11_F.20",
+      "email": "longcoproel@gmail.com",
+      "remarks": "widraw sa munti pinaglain sa LAVAS",
+      "timestamp": 1686189045000,
+      "type": 1,
+      "user": 1
+    },
+    "-NXiWHiCfDtyC9xRMjOB": {
+      "amount": 1000,
+      "createdAt": "6/12/2023, 3:32:22 PM",
+      "date": "06/10/2023",
+      "device": "OPPO F11 - CPH1911_11_F.20",
+      "email": "longcoproel@gmail.com",
+      "remarks": "1k na utang para kay mama wer",
+      "timestamp": 1686389147000,
+      "type": 0,
+      "user": 0
+    },
+    "-NXiWKq0OwYKtqnxjua2": {
+      "amount": 4500,
+      "createdAt": "6/12/2023, 3:32:35 PM",
+      "date": "06/10/2023",
+      "device": "OPPO F11 - CPH1911_11_F.20",
+      "email": "longcoproel@gmail.com",
+      "remarks": "Money Deposit",
+      "timestamp": 1686389165000,
+      "type": 0,
+      "user": 1
+    }
+  }
+}
