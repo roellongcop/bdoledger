@@ -7,17 +7,23 @@ import SettingScreen from "../screens/SettingScreen";
 import LogScreen from "../screens/LogScreen";
 import AuthScreen from "../screens/AuthScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
-
+import { ActivityIndicator, Alert, View } from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
+
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+
+import ProfilePictureComponent from "./ProfilePictureComponent";
+import { getData, storeData } from "../lib/storage";
 import { useDispatch } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import ProfilePictureComponent from "./ProfilePictureComponent";
 
 const AuthStackScreen = () => {
   return (
@@ -26,14 +32,14 @@ const AuthStackScreen = () => {
         name="Login"
         component={AuthScreen}
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="ForgotPassword"
         component={ForgotPasswordScreen}
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
@@ -97,17 +103,47 @@ const LogStackScreen = () => {
 };
 
 const Navigation = () => {
-  const dispatch = useDispatch();
   const [userData, setUserData] = useState(null);
   const auth = getAuth();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    getData("userCredential").then((credential) => {
+      if (credential) {
+        const { email, password } = credential;
+        signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            setLoading(false);
+            const user = userCredential.user || null;
+
+            dispatch({ type: "user/setUser", payload: user });
+            storeData("user", user);
+            storeData("userCredential", { email, password });
+          })
+          .catch((error) => {
+            setLoading(false);
+            Alert.alert("Error", JSON.stringify(error));
+          });
+      }
+    });
     onAuthStateChanged(auth, (user) => {
       setUserData(user);
-
-      dispatch({ type: "user/setUser", payload: user });
     });
-  }, [])
+  }, []);
+
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   if (userData) {
     return (

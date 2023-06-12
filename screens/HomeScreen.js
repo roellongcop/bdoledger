@@ -165,8 +165,10 @@ const HomeScreen = ({ navigation, route }) => {
 
         if (data) {
           data.sort((a, b) => {
-            const dateA = new Date(a.date.split("/").reverse().join("-"));
-            const dateB = new Date(b.date.split("/").reverse().join("-"));
+            const splitA = a.date.split("/");
+            const dateA = new Date([splitA[2], splitA[0], splitA[1]].join('-'));
+            const splitB = b.date.split("/");
+            const dateB = new Date([splitB[2], splitB[0], splitB[1]].join('-'));
             // Compare the timestamps in descending order
             const timestampComparison = b.timestamp - a.timestamp;
 

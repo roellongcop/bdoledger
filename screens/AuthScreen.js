@@ -16,8 +16,11 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { ALLOWED_EMAILS } from "../lib/constants";
+import { useDispatch } from "react-redux";
+import { storeData } from "../lib/storage";
 
 const AuthScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const auth = getAuth();
 
   const [email, setEmail] = useState("");
@@ -31,7 +34,11 @@ const AuthScreen = ({ navigation }) => {
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           setLoading(false);
-          const user = userCredential.user;
+          const user = userCredential.user || null;
+
+          dispatch({ type: "user/setUser", payload: user });
+          storeData("user", user);
+          storeData("userCredential", { email, password });
         })
         .catch((error) => {
           setLoading(false);
