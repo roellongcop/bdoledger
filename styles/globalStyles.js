@@ -12,8 +12,8 @@ const globalStyles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "#fff",
     marginBottom: 10,
-    borderColor: '#ccc',
-    borderWidth: 0.5
+    borderColor: "#ccc",
+    borderWidth: 0.5,
   },
   button: {
     backgroundColor: "#1BC5BD",
@@ -60,7 +60,6 @@ const globalStyles = StyleSheet.create({
     justifyContent: "space-between",
   },
 
-
   flexContainerEnd: {
     marginTop: 20,
     display: "flex",
@@ -74,7 +73,7 @@ const globalStyles = StyleSheet.create({
     justifyContent: "space-between",
   },
   pickerContainer: {
-    width: '33%'
+    width: "33%",
   },
 
   total: {
@@ -85,11 +84,11 @@ const globalStyles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
-  searchInput: { 
-    backgroundColor: '#eee', 
-    borderColor: '#ddd', 
-    borderWidth: 1, 
-    height: 50 
+  searchInput: {
+    backgroundColor: "#eee",
+    borderColor: "#ddd",
+    borderWidth: 1,
+    height: 50,
   },
   input: {
     width: "100%",
@@ -99,7 +98,7 @@ const globalStyles = StyleSheet.create({
     padding: 10,
     fontSize: 14,
     marginBottom: 10,
-    backgroundColor: '#eeeeee'
+    backgroundColor: "#eeeeee",
   },
   textarea: {
     borderRadius: 5,
@@ -108,7 +107,7 @@ const globalStyles = StyleSheet.create({
     padding: 10,
     fontSize: 14,
     marginBottom: 10,
-    backgroundColor: '#eeeeee',
+    backgroundColor: "#eeeeee",
   },
   inputLabel: {
     fontSize: 16,
@@ -117,9 +116,9 @@ const globalStyles = StyleSheet.create({
   },
   amount: {
     fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'right',
-    textAlignVertical: 'top'
+    fontWeight: "bold",
+    textAlign: "right",
+    textAlignVertical: "top",
   },
   date: {
     fontSize: 14,
@@ -135,9 +134,9 @@ const globalStyles = StyleSheet.create({
     fontSize: 14,
   },
   rowKey: {
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'row'
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "row",
   },
   itemContainer: {
     flex: 1,
@@ -149,12 +148,12 @@ const globalStyles = StyleSheet.create({
     backgroundColor: "#fff",
     // alignItems: "center",
     borderRadius: 5,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderWidth: 0.5,
-    textAlignVertical: 'top'
+    textAlignVertical: "top",
   },
   column: {
-    textAlignVertical: 'top'
+    textAlignVertical: "top",
   },
   itemColumn: {
     flex: 1,
@@ -162,16 +161,32 @@ const globalStyles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   buttonTitle: {
-    color: '#fff',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    textTransform: 'uppercase'
+    color: "#fff",
+    fontWeight: "bold",
+    textAlign: "center",
+    textTransform: "uppercase",
   },
-  centerFlex: { 
-    display: 'flex', 
-    flexDirection: 'row', 
-    alignItems: "center" 
-  }
+  centerFlex: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  bottomSheet: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    paddingVertical: 23,
+    paddingHorizontal: 25,
+    bottom: 0,
+    borderWidth: 1,
+    borderColor: "red",
+  },
 });
 
 export default globalStyles;

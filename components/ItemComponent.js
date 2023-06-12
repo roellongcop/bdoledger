@@ -28,7 +28,10 @@ const ItemComponent = React.memo(({ item, index, length }) => {
             <Text>{length - index}) </Text>
             <Text style={globalStyles.user}>
               {USERS[item.user].label}
-              <Text style={{ color: "#bbb" }}> ({timeAgo(item.timestamp)})</Text>
+              <Text style={{ color: "#bbb" }}>
+                {" "}
+                ({timeAgo(item.timestamp)})
+              </Text>
             </Text>
           </View>
           <Text

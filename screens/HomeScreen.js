@@ -45,8 +45,8 @@ const HomeScreen = ({ navigation, route }) => {
     subscribeTransactions();
 
     return () => {
-    firebaseOff("transactions", firebaseCallback);
-    setLoading(false);
+      firebaseOff("transactions", firebaseCallback);
+      setLoading(false);
     };
   }, []);
 
@@ -151,9 +151,11 @@ const HomeScreen = ({ navigation, route }) => {
 
             t = element.type == ADD ? t + element.amount : t - element.amount;
             if (element.user == ANNABELLE) {
-              ta = element.type == ADD ? ta + element.amount : ta - element.amount;
+              ta =
+                element.type == ADD ? ta + element.amount : ta - element.amount;
             } else {
-              tr = element.type == ADD ? tr + element.amount : tr - element.amount;
+              tr =
+                element.type == ADD ? tr + element.amount : tr - element.amount;
             }
           }
         }
@@ -260,7 +262,6 @@ const HomeScreen = ({ navigation, route }) => {
           keyExtractor={(item) => item.key}
         />
       }
-
       {scrollDirection == "down" && offset ? (
         <IconButton
           icon="arrow-up"
