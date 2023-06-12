@@ -12,13 +12,13 @@ import {
 import SubText from "./SubText";
 import HeadingText from "./HeadingText";
 
-const BottomDrawer = ({ open }) => {
+const BottomDrawer = () => {
   // We need to get the height of the phone and use it relatively,
   // This is because height of phones vary
   const windowHeight = Dimensions.get("window").height;
 
   // This state would determine if the drawer sheet is visible or not
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(open);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   // Function to open the bottom sheet
   const handleOpenBottomSheet = () => {
@@ -106,6 +106,12 @@ const BottomDrawer = ({ open }) => {
                 <SubText text={"Views (30 days)"} color={"#86827e"} size={12} />
                 <SubText text={"4,904"} color={"#292929"} size={18} />
               </View>
+
+              <View style={{ paddingTop: 16 }}>
+                <SubText text={"Views (30 days)"} color={"#86827e"} size={12} />
+                <HeadingText text={"4,904"} color={"#292929"} size={18} />
+              </View>
+
             </View>
           </View>
         </Modal>

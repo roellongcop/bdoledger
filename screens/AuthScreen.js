@@ -15,10 +15,10 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { ALLOWED_EMAILS } from "../lib/constants";
 
-const AuthScreen = () => {
+const AuthScreen = ({ navigation }) => {
   const auth = getAuth();
-  const acceptedEmail = ["longcoproel@gmail.com", "annabellegernale@gmail.com"];
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,18 +26,18 @@ const AuthScreen = () => {
 
   // Function to handle email/password sign-in
   const handleSignIn = () => {
-    setLoading(true);
-    if (acceptedEmail.includes(email)) {
+    if (ALLOWED_EMAILS.includes(email)) {
+      setLoading(true);
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           setLoading(false);
-          // Signed inr
           const user = userCredential.user;
         })
         .catch((error) => {
+          setLoading(false);
           const { message, code } = error;
-          // Alert.alert("Error", message);
-          handleSignUp();
+          Alert.alert("Error", code);
+          // handleSignUp();
         });
     } else {
       Alert.alert("Error", "invalid Email");
@@ -57,8 +57,12 @@ const AuthScreen = () => {
       .catch((error) => {
         setLoading(false);
         const { message, code } = error;
-        Alert.alert("Error", code);
+        Alert.alert("Error", "Wrong email or password");
       });
+  };
+
+  const handleForgotPasswordBtn = () => {
+    navigation.navigate("ForgotPassword");
   };
 
   return (
@@ -74,7 +78,7 @@ const AuthScreen = () => {
         <View style={authStyles.inputContainer}>
           <TextInput
             style={authStyles.input}
-            placeholder="Username"
+            placeholder="Username or Email"
             onChangeText={setEmail}
           />
           <TextInput
@@ -83,6 +87,12 @@ const AuthScreen = () => {
             onChangeText={setPassword}
             secureTextEntry={true}
           />
+          <Button
+            style={{ alignSelf: "flex-start" }}
+            onPress={handleForgotPasswordBtn}
+          >
+            Forgot Password?
+          </Button>
         </View>
 
         <Button

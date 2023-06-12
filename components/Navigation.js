@@ -6,6 +6,8 @@ import TransactionScreen from "../screens/TransactionScreen";
 import SettingScreen from "../screens/SettingScreen";
 import LogScreen from "../screens/LogScreen";
 import AuthScreen from "../screens/AuthScreen";
+import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
+
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -21,8 +23,15 @@ const AuthStackScreen = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Home"
+        name="Login"
         component={AuthScreen}
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="ForgotPassword"
+        component={ForgotPasswordScreen}
         options={{
           headerShown: false
         }}
