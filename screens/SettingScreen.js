@@ -11,22 +11,30 @@ import { Button } from "react-native-paper";
 import globalStyles from "../styles/globalStyles";
 import { useDispatch } from "react-redux";
 
+import {
+  getAuth,
+  signOut
+} from "firebase/auth";
+
 const SettingScreen = ({ navigation, route }) => {
+  const auth = getAuth();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
-  const onRefresh = () => {
-    
-  }
+  const onRefresh = () => {};
 
-  const logout = () => {
-    
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        console.log("User logged out successfully");
+      })
+      .catch((error) => {
+        console.log("Logout error:", error);
+      });
   };
-
 
   return (
     <SafeAreaView style={globalStyles.mainContainer}>
@@ -36,7 +44,7 @@ const SettingScreen = ({ navigation, route }) => {
         }
       >
         <View style={globalStyles.container}>
-        <Button
+          <Button
             disabled={loading}
             loading={loading}
             labelStyle={{ color: "#fff" }}
@@ -45,7 +53,7 @@ const SettingScreen = ({ navigation, route }) => {
             style={{ width: "100%" }}
             icon="content-save-check"
             mode="contained"
-            onPress={() => logout()}
+            onPress={() => handleLogout()}
           >
             Logout
           </Button>
