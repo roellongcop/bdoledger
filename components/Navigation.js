@@ -125,6 +125,8 @@ const Navigation = () => {
             setLoading(false);
             Alert.alert("Error", JSON.stringify(error));
           });
+      } else {
+        setLoading(false);
       }
     });
     onAuthStateChanged(auth, (user) => {
