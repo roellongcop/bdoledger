@@ -61,8 +61,7 @@ const LogScreen = ({ navigation, route }) => {
     if (filteredLogs.length) {
       return (
         <Text style={{ marginBottom: 5 }}>
-          Showing {filteredLogs.length.toLocaleString()} out of{" "}
-          {totalLogs.toLocaleString()} Records
+          {filteredLogs.length.toLocaleString()} records found.
         </Text>
       );
     }
@@ -108,11 +107,13 @@ const LogScreen = ({ navigation, route }) => {
       link: "logs",
       successCallback: firebaseCallback,
       errorCallback: (error) => {
+        const { code } = error;
+
         getData("logs").then((result) => {
           dispatch({ type: "log/setLogState", payload: result || [] });
         });
         setLoading(false);
-        Alert.alert("Error", JSON.stringify(error));
+        Alert.alert("Error", code);
       },
     });
   };
@@ -145,7 +146,7 @@ const LogScreen = ({ navigation, route }) => {
       return (
         <Button
           onPress={() => {
-            getLogs();
+            onRefresh();
           }}
         >
           Reload Transactions Logs

@@ -8,8 +8,6 @@ import { ALLOWED_EMAILS } from "../lib/constants";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const auth = getAuth();
-  const acceptedEmail = ["longcoproel@gmail.com", "annabellegernale@gmail.com"];
-
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -27,7 +25,8 @@ const ForgotPasswordScreen = ({ navigation }) => {
         })
         .catch((error) => {
           setLoading(false);
-          Alert.alert("Error", JSON.stringify(error));
+          const { code } = error;
+          Alert.alert("Error", code);
         });
     } else {
       setLoading(false);
@@ -45,7 +44,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
         <View style={authStyles.inputContainer}>
           <TextInput
             style={authStyles.input}
-            placeholder="Username or Email"
+            placeholder="Email"
             onChangeText={setEmail}
           />
           <Button style={{ alignSelf: "flex-start" }} onPress={handleLoginBtn}>

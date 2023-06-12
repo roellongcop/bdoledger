@@ -122,8 +122,9 @@ const Navigation = () => {
             storeData("userCredential", { email, password });
           })
           .catch((error) => {
+            const { code } = error;
             setLoading(false);
-            Alert.alert("Error", JSON.stringify(error));
+            Alert.alert("Error", code);
           });
       } else {
         setLoading(false);

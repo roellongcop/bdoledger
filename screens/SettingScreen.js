@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -9,19 +9,18 @@ import {
 } from "react-native";
 import { Button } from "react-native-paper";
 import globalStyles from "../styles/globalStyles";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { getAuth, signOut } from "firebase/auth";
 import ProfilePictureComponent from "../components/ProfilePictureComponent";
+import { storeData } from "../lib/storage";
 
 const SettingScreen = () => {
   const auth = getAuth();
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.USER);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
-  useEffect(() => {
-  }, []);
 
   const onRefresh = () => {};
 
@@ -30,9 +29,13 @@ const SettingScreen = () => {
     signOut(auth)
       .then(() => {
         setLoading(false);
+        dispatch({ type: "user/setUser", payload: user });
+        storeData("user", null);
+        storeData("userCredential", null);
       })
       .catch((error) => {
-        Alert.alert("Error", JSON.stringify(error));
+        const { code } = error;
+        Alert.alert("Error", code);
         setLoading(false);
       });
   };

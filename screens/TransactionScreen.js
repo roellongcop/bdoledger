@@ -104,8 +104,10 @@ const TransactionScreen = ({ navigation, route }) => {
       link: `logs/${key}`,
       successCallback: firebaseCallback,
       errorCallback: (error) => {
+        const { code } = error;
+
         setRefreshingLogs(false);
-        Alert.alert("Error", JSON.stringify(error));
+        Alert.alert("Error", code);
       },
     });
   };
@@ -152,7 +154,7 @@ const TransactionScreen = ({ navigation, route }) => {
       device: [Device.deviceName, Device.osBuildId].join(" - "),
       timestamp,
       createdAt: new Date(timestamp).toLocaleString(),
-      email: user.email
+      email: user.email,
     };
   };
 
@@ -167,9 +169,10 @@ const TransactionScreen = ({ navigation, route }) => {
         navigation.navigate("Dashboard", { screen: "Home" });
       },
       errorCallback: (error) => {
+        const { code } = error;
         setLoading(false);
         setDeleteLoading(false);
-        Alert.alert("Error", JSON.stringify(error));
+        Alert.alert("Error", code);
       },
     });
   };
@@ -194,8 +197,10 @@ const TransactionScreen = ({ navigation, route }) => {
               pushLog(data);
             },
             errorCallback: (error) => {
+              const { code } = error;
+
               setDeleteLoading(false);
-              Alert.alert("Error", JSON.stringify(error));
+              Alert.alert("Error", code);
             },
           });
         },
@@ -230,7 +235,9 @@ const TransactionScreen = ({ navigation, route }) => {
           pushLog(data);
         },
         errorCallback: (error) => {
-          Alert.alert("Error", JSON.stringify(error));
+          const { code } = error;
+
+          Alert.alert("Error", code);
           setLoading(false);
         },
       });
@@ -243,8 +250,10 @@ const TransactionScreen = ({ navigation, route }) => {
           pushLog(data, result.key);
         },
         errorCallback: (error) => {
+          const { code } = error;
+
           setLoading(false);
-          Alert.alert("Error", JSON.stringify(error));
+          Alert.alert("Error", code);
         },
       });
     }

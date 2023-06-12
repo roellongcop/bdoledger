@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,8 +6,11 @@ import {
   Alert,
   ImageBackground,
   StatusBar,
+  RefreshControl,
+  ScrollView,
+  SafeAreaView,
 } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, Snackbar } from "react-native-paper";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import authStyles from "../styles/authStyles";
 import {
@@ -17,7 +20,8 @@ import {
 } from "firebase/auth";
 import { ALLOWED_EMAILS } from "../lib/constants";
 import { useDispatch } from "react-redux";
-import { storeData } from "../lib/storage";
+import { getData, storeData } from "../lib/storage";
+import NetInfo from "@react-native-community/netinfo";
 
 const AuthScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -26,9 +30,11 @@ const AuthScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [snackbar, setSnackbar] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // Function to handle email/password sign-in
-  const handleSignIn = () => {
+  const handleSignIn = (callback = () => {}) => {
     if (ALLOWED_EMAILS.includes(email)) {
       setLoading(true);
       signInWithEmailAndPassword(auth, email, password)
@@ -39,15 +45,21 @@ const AuthScreen = ({ navigation }) => {
           dispatch({ type: "user/setUser", payload: user });
           storeData("user", user);
           storeData("userCredential", { email, password });
+          callback();
         })
         .catch((error) => {
+          callback();
           setLoading(false);
-          const { message, code } = error;
-          Alert.alert("Error", code);
-          // handleSignUp();
+          const { code } = error;
+          setErrorMessage(code);
+          setSnackbar(true);
+
+          // Alert.alert("Error", code);
         });
     } else {
-      Alert.alert("Error", "invalid Email");
+      setErrorMessage("invalid Email");
+      setSnackbar(true);
+      // Alert.alert("Error", "invalid Email");
       setLoading(false);
     }
   };
@@ -63,8 +75,8 @@ const AuthScreen = ({ navigation }) => {
       })
       .catch((error) => {
         setLoading(false);
-        const { message, code } = error;
-        Alert.alert("Error", "Wrong email or password");
+        const { code } = error;
+        Alert.alert("Error", code);
       });
   };
 
@@ -72,51 +84,108 @@ const AuthScreen = ({ navigation }) => {
     navigation.navigate("ForgotPassword");
   };
 
+  const handleRefresh = () => {
+    setRefreshing(true);
+    getData("userCredential").then((credential) => {
+      if (credential) {
+        const { email, password } = credential;
+
+        setEmail(email);
+        setPassword(password);
+        NetInfo.fetch().then((state) => {
+          if (state.isConnected) {
+            handleSignIn(() => {
+              setRefreshing(false);
+            });
+          } else {
+            setSnackbar(true);
+            setErrorMessage("No internet");
+          }
+        });
+      } else {
+        setRefreshing(false);
+      }
+    });
+  };
+
+  useEffect(() => {
+    NetInfo.fetch().then((state) => {
+      if (!state.isConnected) {
+        setSnackbar(true);
+        setErrorMessage("No internet");
+      }
+    });
+  }, []);
+
   return (
-    <View style={authStyles.container}>
-      <StatusBar translucent backgroundColor="transparent" />
-      {/* <ImageBackground
-        source={require("../assets/adaptive-icon.png")} // Replace with your desired background image
-        style={authStyles.background}
-      > */}
-      <View style={authStyles.overlay}>
-        <Text style={authStyles.logo}>Sign In to BDO Ledger</Text>
+    <SafeAreaView style={authStyles.container}>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: "center",
+        }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
+      >
+        <View style={authStyles.container}>
+          <StatusBar translucent backgroundColor="transparent" />
 
-        <View style={authStyles.inputContainer}>
-          <TextInput
-            style={authStyles.input}
-            placeholder="Username or Email"
-            onChangeText={setEmail}
-          />
-          <TextInput
-            style={authStyles.input}
-            placeholder="Password"
-            onChangeText={setPassword}
-            secureTextEntry={true}
-          />
-          <Button
-            style={{ alignSelf: "flex-start" }}
-            onPress={handleForgotPasswordBtn}
-          >
-            Forgot Password?
-          </Button>
+          <View style={authStyles.overlay}>
+            <Text style={authStyles.logo}>Sign In to BDO Ledger</Text>
+
+            <View style={authStyles.inputContainer}>
+              <TextInput
+                style={authStyles.input}
+                placeholder="Username or Email"
+                onChangeText={setEmail}
+              />
+              <TextInput
+                style={authStyles.input}
+                placeholder="Password"
+                onChangeText={setPassword}
+                secureTextEntry={true}
+              />
+              <Button
+                style={{ alignSelf: "flex-start" }}
+                onPress={handleForgotPasswordBtn}
+              >
+                Forgot Password?
+              </Button>
+            </View>
+
+            <Button
+              style={{ width: "90%" }}
+              disabled={loading}
+              loading={loading}
+              buttonColor="#337ab7"
+              mode="contained"
+              icon="login"
+              labelStyle={{ color: "#fff" }}
+              onPress={handleSignIn}
+            >
+              Sign In
+            </Button>
+
+            <Snackbar
+              visible={snackbar}
+              onDismiss={() => {
+                setSnackbar(false);
+              }}
+              action={{
+                label: "OK",
+                onPress: () => {
+                  // Do something
+                },
+              }}
+            >
+              {errorMessage}
+            </Snackbar>
+          </View>
+          <ExpoStatusBar style="auto" />
         </View>
-
-        <Button
-          disabled={loading}
-          loading={loading}
-          buttonColor="#337ab7"
-          mode="contained"
-          icon="login"
-          labelStyle={{ color: "#fff" }}
-          onPress={handleSignIn}
-        >
-          Sign In
-        </Button>
-      </View>
-      {/* </ImageBackground> */}
-      <ExpoStatusBar style="auto" />
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

@@ -125,8 +125,7 @@ const HomeScreen = ({ navigation, route }) => {
     if (filteredTransactions.length) {
       return (
         <Text style={{ marginBottom: 5 }}>
-          Showing {filteredTransactions.length.toLocaleString()} out of{" "}
-          {transactions.length.toLocaleString()} Records
+          {filteredTransactions.length.toLocaleString()} records found.
         </Text>
       );
     }
@@ -194,6 +193,8 @@ const HomeScreen = ({ navigation, route }) => {
       link: "transactions",
       successCallback: firebaseCallback,
       errorCallback: (error) => {
+        const { code } = error;
+
         getData("transactions").then((result) => {
           const data = result || [];
           let t = 0;
@@ -224,7 +225,7 @@ const HomeScreen = ({ navigation, route }) => {
           dispatch({ type: "transaction/setTransactions", payload: data });
         });
         setLoading(false);
-        Alert.alert("Error", JSON.stringify(error));
+        Alert.alert("Error", code);
       },
     });
   };
