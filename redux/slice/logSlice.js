@@ -1,17 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
 const slice = createSlice({
-  name: 'log',
+  name: "log",
   initialState: {
     logs: [],
     totalLogs: 0,
-    logsOffset: 0
+    logsOffset: 0,
   },
   reducers: {
     setLogState: (state, action) => {
-      const { logs, totalLogs } = action.payload;
+      const logs = action.payload;
       state.logs = logs;
-      state.totalLogs = totalLogs;
+      state.totalLogs = logs.length;
       state.logsOffset = logs.length;
     },
     setLogs: (state, action) => {
@@ -25,7 +25,7 @@ const slice = createSlice({
     addLog: (state, action) => {
       state.logs = [...state.logs, ...action.payload];
     },
-  }
-})
+  },
+});
 
 export default slice.reducer;

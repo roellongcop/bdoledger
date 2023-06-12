@@ -19,6 +19,7 @@ import { apiGet } from "../lib/http";
 import { storeData, getData } from "../lib/storage";
 import { ACTIONS, CREATE, UPDATE, DELETE } from "../lib/constants";
 import LogComponent from "../components/LogComponent";
+import { firebaseOff, firebaseSubscribe, readData } from "../firebaseConfig";
 
 const LogScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -44,7 +45,7 @@ const LogScreen = ({ navigation, route }) => {
 
       return (
         values.some((value) => value.includes(searchTerm.toLowerCase())) &&
-        obj.action_type == segment
+        obj.actionType == segment
       );
     });
     setFilteredLogs(data);
@@ -55,6 +56,7 @@ const LogScreen = ({ navigation, route }) => {
 
     return () => {
       setLoading(false);
+      firebaseOff("logs", firebaseCallback);
     };
   }, []);
 
@@ -71,37 +73,53 @@ const LogScreen = ({ navigation, route }) => {
     return <Text style={{ marginBottom: 5 }}>No records found</Text>;
   };
 
-  const getLogs = () => {
-    setLoading(true);
-    apiGet("?table=logs", {
-      success: (result) => {
-        const { status, data } = result;
-        if (status) {
-          dispatch({ type: "log/setLogState", payload: data });
-          storeData("logs", data);
-        } else {
-          Alert.alert("Error!", data.message);
-        }
-        setLoading(false);
-      },
-      error: (error) => {
-        const { message } = error.data;
-        Alert.alert("Error!", message);
-        setLoading(false);
-      },
-      offline: (state) => {
-        getData("logs").then((data) => {
-          if (data) {
-            dispatch({ type: "log/setLogState", payload: data });
+  const firebaseCallback = (snapshot) => {
+    if (snapshot) {
+      const obj = snapshot.val();
+      let data = [];
+      if (obj) {
+        for (const tKey in obj) {
+          if (Object.hasOwnProperty.call(obj, tKey)) {
+            let element = obj[tKey];
+
+            for (const lKey in element) {
+              if (Object.hasOwnProperty.call(element, lKey)) {
+                const element2 = element[lKey];
+                element2.transactionKey = tKey;
+                element2.key = lKey;
+
+                data.push(element2);
+              }
+            }
           }
-          setLoading(false);
-        });
-      },
-      invalidToken: () => {
+        }
+
+        if (data) {
+          data.sort((a, b) => b.timestamp - a.timestamp);
+        }
+      }
+
+      dispatch({ type: "log/setLogState", payload: data });
+      storeData("logs", data);
+    }
+    setLoading(false);
+  };
+
+  const onRefresh = () => {
+    setLoading(true);
+    readData({
+      link: "logs",
+      successCallback: firebaseCallback,
+      errorCallback: (error) => {
         setLoading(false);
-        navigation.navigate("Settings", { screen: "Setting" });
+        Alert.alert("Error", JSON.stringify(error));
       },
     });
+  };
+
+  const getLogs = () => {
+    setLoading(true);
+    firebaseSubscribe("logs", firebaseCallback);
   };
 
   const handleScroll = (event) => {
@@ -114,44 +132,6 @@ const LogScreen = ({ navigation, route }) => {
       setScrollDirection("up");
     }
     setOffset(_offset);
-  };
-
-  const loadMoreLogs = () => {
-    setLoadMoreLoading(true);
-    apiGet(`?table=logs&offset=${logsOffset}`, {
-      success: (result) => {
-        const { status, data } = result;
-        if (status) {
-          const newLogs = [...logs, ...data.logs];
-          data.logs = newLogs;
-          dispatch({ type: "log/setLogState", payload: data });
-          storeData("logs", data);
-        } else {
-          Alert.alert("Error!", data.message);
-        }
-        setLoadMoreLoading(false);
-      },
-      error: (error) => {
-        const { message } = error.data;
-        Alert.alert("Error!", message);
-        setLoadMoreLoading(false);
-      },
-      offline: (state) => {
-        Alert.alert("No Internet!", "Please check internet connection");
-      },
-      invalidToken: () => {
-        setLoadMoreLoading(false);
-        navigation.navigate("Settings", { screen: "Setting" });
-      },
-    });
-  };
-
-  const renderFooter = () => {
-    return totalLogs > logsOffset ? (
-      <Button loading={loadMoreLoading} onPress={loadMoreLogs}>
-        Load More
-      </Button>
-    ) : null;
   };
 
   const scrollToOffset = (offset) => {
@@ -247,17 +227,14 @@ const LogScreen = ({ navigation, route }) => {
       <FlatList
         ref={flatListRef}
         refreshing={loading}
-        onRefresh={() => {
-          getLogs();
-        }}
+        onRefresh={onRefresh}
         onScroll={handleScroll}
         scrollEventThrottle={16}
         data={filteredLogs}
         renderItem={({ item, index }) => (
           <LogComponent item={item} index={index} />
         )}
-        keyExtractor={(item) => item.id.toString()}
-        ListFooterComponent={renderFooter}
+        keyExtractor={(item) => item.key}
       />
 
       {scrollDirection == "down" && offset ? (

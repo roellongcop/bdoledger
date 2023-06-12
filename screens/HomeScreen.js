@@ -11,7 +11,7 @@ import {
 } from "react-native-paper";
 import { storeData } from "../lib/storage";
 import { USERS, ANNABELLE, ROEL } from "../lib/constants";
-import { firebaseSubscribe, readData } from "../firebaseConfig";
+import { firebaseOff, firebaseSubscribe, readData } from "../firebaseConfig";
 import { ADD } from "../lib/constants";
 
 const HomeScreen = ({ navigation, route }) => {
@@ -45,7 +45,8 @@ const HomeScreen = ({ navigation, route }) => {
     subscribeTransactions();
 
     return () => {
-      setLoading(false);
+    firebaseOff("transactions", firebaseCallback);
+    setLoading(false);
     };
   }, []);
 
