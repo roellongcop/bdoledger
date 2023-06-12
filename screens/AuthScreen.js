@@ -97,6 +97,7 @@ const AuthScreen = ({ navigation }) => {
               setRefreshing(false);
             });
           } else {
+            setRefreshing(false);
             setErrorMessage("No internet");
             setSnackbar(true);
           }
