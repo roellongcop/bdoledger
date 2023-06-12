@@ -30,6 +30,8 @@ const AuthScreen = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+
+        Alert.alert('Success', 'Sign Up Successfully');
       })
       .catch((error) => {
         const { message, code } = error;

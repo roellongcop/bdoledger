@@ -3,6 +3,7 @@ import counterSlice from './slice/counterSlice';
 import transactionSlice from './slice/transactionSlice';
 import settingSlice from './slice/settingSlice';
 import logSlice from './slice/logSlice';
+import userSlice from './slice/userSlice';
 import { asyncFunctionMiddleware } from './middleware/asyncFunctionMiddleware';
 
 const store = configureStore({
@@ -11,6 +12,7 @@ const store = configureStore({
     COUNTER: counterSlice,
     SETTING: settingSlice,
     LOG: logSlice,
+    USER: userSlice,
   },
   middleware: [
     asyncFunctionMiddleware,

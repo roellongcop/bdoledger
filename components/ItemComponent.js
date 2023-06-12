@@ -34,9 +34,10 @@ const ItemComponent = React.memo(({ item, index, length }) => {
               </Text>
             </Text>
           </View>
+          <Text style={globalStyles.remarks}>Email: {item.email || 'N/A'}</Text>
           <Text
             ellipsizeMode="tail"
-            numberOfLines={2}
+            numberOfLines={1}
             style={globalStyles.remarks}
           >
             {item.remarks}

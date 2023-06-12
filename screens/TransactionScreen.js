@@ -12,7 +12,7 @@ import {
 import globalStyles from "../styles/globalStyles";
 import { getCurrentDate } from "../lib/date";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, SegmentedButtons } from "react-native-paper";
 import { convertToDate } from "../lib/date";
 import {
@@ -39,6 +39,8 @@ import {
 
 const TransactionScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.USER);
+
   const { action, item } = route.params;
   const [key, setKey] = useState("");
   const [amount, setAmount] = useState("");
@@ -150,6 +152,7 @@ const TransactionScreen = ({ navigation, route }) => {
       device: [Device.deviceName, Device.osBuildId].join(" - "),
       timestamp,
       createdAt: new Date(timestamp).toLocaleString(),
+      email: user.email
     };
   };
 

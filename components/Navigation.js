@@ -10,6 +10,7 @@ import AuthScreen from "../screens/AuthScreen";
 import InternetBadgeComponent from "./InternetBadgeComponent";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useDispatch } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -87,12 +88,15 @@ const LogStackScreen = () => {
 };
 
 const Navigation = () => {
+  const dispatch = useDispatch();
   const [userData, setUserData] = useState(null);
   const auth = getAuth();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       setUserData(user);
+
+      dispatch({ type: "user/setUser", payload: user });
     });
   }, [])
 

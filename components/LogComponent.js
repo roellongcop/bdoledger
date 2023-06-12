@@ -54,6 +54,7 @@ const LogComponent = React.memo(({ item, index }) => {
             },
           ]}
         >
+          {'Email: ' + (item.email || 'N/A') + "\n"}
           {'User: ' + USERS[item.user].label + "\n"}
           {'Action: ' + TYPES[item.type].label + "\n"}
           {'Amount: ' + item.amount + "\n"}
