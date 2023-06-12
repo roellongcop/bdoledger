@@ -127,7 +127,7 @@ const globalStyles = StyleSheet.create({
     textAlign: "right",
   },
   remarks: {
-    marginTop: 5,
+    // marginTop: 2,
     fontSize: 14,
     color: "#999",
   },

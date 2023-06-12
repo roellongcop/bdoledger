@@ -54,11 +54,11 @@ const LogComponent = React.memo(({ item, index }) => {
             },
           ]}
         >
-          {'User:' + USERS[item.user].label + "\n"}
-          {'Action:' + TYPES[item.type].label + "\n"}
-          {'Amount:' + item.amount + "\n"}
-          {'Date:' + item.date + "\n"}
-          {'Remarks:' + item.remarks + "\n"}
+          {'User: ' + USERS[item.user].label + "\n"}
+          {'Action: ' + TYPES[item.type].label + "\n"}
+          {'Amount: ' + item.amount + "\n"}
+          {'Date: ' + item.date + "\n"}
+          {'Remarks: ' + item.remarks + "\n"}
         </Text>
       </View>
     </TouchableOpacity>

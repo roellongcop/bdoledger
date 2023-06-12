@@ -50,20 +50,10 @@ const HomeScreen = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    let t = 0;
-    let tr = 0;
-    let ta = 0;
     const _filteredTransactions = transactions.filter((obj) => {
       const values = Object.values(obj).map((value) =>
         String(value).toLowerCase()
       );
-
-      t = obj.type == ADD ? t + obj.amount : t - obj.amount;
-      if (obj.user == ANNABELLE) {
-        ta = obj.type == ADD ? ta + obj.amount : ta - obj.amount;
-      } else {
-        tr = obj.type == ADD ? tr + obj.amount : tr - obj.amount;
-      }
 
       if (segment == "All") {
         return values.some((value) => value.includes(searchTerm.toLowerCase()));
@@ -74,10 +64,6 @@ const HomeScreen = ({ navigation, route }) => {
         obj.user == segment
       );
     });
-
-    setTotal(t);
-    setTotalAnnabelle(ta);
-    setTotalRoel(tr);
 
     setFilteredTransactions(_filteredTransactions);
   }, [searchTerm, transactions, segment]);
@@ -152,12 +138,40 @@ const HomeScreen = ({ navigation, route }) => {
       const obj = snapshot.val();
       let data = [];
       if (obj) {
-        data = Object.entries(obj).map(([key, value]) => ({ key, ...value }));
+        let t = 0;
+        let tr = 0;
+        let ta = 0;
+
+        for (const key in obj) {
+          if (Object.hasOwnProperty.call(obj, key)) {
+            let element = obj[key];
+            element.key = key;
+            data.push(element);
+
+            t = element.type == ADD ? t + element.amount : t - element.amount;
+            if (element.user == ANNABELLE) {
+              ta = element.type == ADD ? ta + element.amount : ta - element.amount;
+            } else {
+              tr = element.type == ADD ? tr + element.amount : tr - element.amount;
+            }
+          }
+        }
+        setTotal(t);
+        setTotalAnnabelle(ta);
+        setTotalRoel(tr);
+
         if (data) {
           data.sort((a, b) => {
             const dateA = new Date(a.date.split("/").reverse().join("-"));
             const dateB = new Date(b.date.split("/").reverse().join("-"));
-            return dateB - dateA;
+            // Compare the timestamps in descending order
+            const timestampComparison = b.timestamp - a.timestamp;
+
+            // If the timestamps are equal, compare the dates in descending order
+            const dateComparison = dateB.getTime() - dateA.getTime();
+
+            // Return the result of the combined comparison
+            return dateComparison !== 0 ? dateComparison : timestampComparison;
           });
         }
       }

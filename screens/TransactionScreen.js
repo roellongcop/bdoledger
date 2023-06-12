@@ -15,7 +15,6 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useDispatch } from "react-redux";
 import { Button, SegmentedButtons } from "react-native-paper";
 import { convertToDate } from "../lib/date";
-import { storeData } from "../lib/storage";
 import {
   ADD,
   MINUS,
@@ -35,7 +34,7 @@ import {
   updateData,
   firebaseSubscribe,
   firebaseOff,
-readData,
+  readData,
 } from "../firebaseConfig";
 
 const TransactionScreen = ({ navigation, route }) => {
@@ -66,12 +65,12 @@ const TransactionScreen = ({ navigation, route }) => {
 
       setLogs(data);
     }
+
     setRefreshingLogs(false);
   };
 
   const populateInputs = () => {
     if (action == "view") {
-
       const { key, amount, date, remarks, type, user } = item;
 
       setKey(key);
@@ -82,7 +81,6 @@ const TransactionScreen = ({ navigation, route }) => {
       setDate(date);
       setLogs([]);
       setSelectedDate(convertToDate(date));
-
 
       firebaseSubscribe(`logs/${key}`, firebaseCallback);
     }
@@ -445,7 +443,11 @@ const TransactionScreen = ({ navigation, route }) => {
           </Button>
         </View>
 
-        <Modal visible={modalVisible} animationType="slide">
+        <Modal
+          visible={modalVisible}
+          animationType="slide"
+          onRequestClose={() => setModalVisible(false)}
+        >
           <View style={[globalStyles.mainContainer]}>
             {showLogs()}
             {/* Add your custom content here */}
