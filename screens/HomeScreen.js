@@ -9,7 +9,7 @@ import {
   SegmentedButtons,
   IconButton,
 } from "react-native-paper";
-import { storeData } from "../lib/storage";
+import { getData, storeData } from "../lib/storage";
 import { USERS, ANNABELLE, ROEL } from "../lib/constants";
 import { firebaseOff, firebaseSubscribe, readData } from "../firebaseConfig";
 import { ADD } from "../lib/constants";
@@ -192,6 +192,35 @@ const HomeScreen = ({ navigation, route }) => {
       link: "transactions",
       successCallback: firebaseCallback,
       errorCallback: (error) => {
+        getData("transactions").then((result) => {
+          const data = result || [];
+          let t = 0;
+          let tr = 0;
+          let ta = 0;
+
+          for (const key in data) {
+            if (Object.hasOwnProperty.call(obj, key)) {
+              let element = obj[key];
+
+              t = element.type == ADD ? t + element.amount : t - element.amount;
+              if (element.user == ANNABELLE) {
+                ta =
+                  element.type == ADD
+                    ? ta + element.amount
+                    : ta - element.amount;
+              } else {
+                tr =
+                  element.type == ADD
+                    ? tr + element.amount
+                    : tr - element.amount;
+              }
+            }
+          }
+          setTotal(t);
+          setTotalAnnabelle(ta);
+          setTotalRoel(tr);
+          dispatch({ type: "transaction/setTransactions", payload: data });
+        });
         setLoading(false);
         Alert.alert("Error", JSON.stringify(error));
       },

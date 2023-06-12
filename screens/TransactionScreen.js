@@ -61,6 +61,8 @@ const TransactionScreen = ({ navigation, route }) => {
       let data = [];
       if (obj) {
         data = Object.entries(obj).map(([key, value]) => ({ key, ...value }));
+
+        data.sort((a, b) => b.timestamp - a.timestamp);
       }
 
       setLogs(data);

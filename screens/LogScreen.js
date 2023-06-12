@@ -5,7 +5,6 @@ import {
   Text,
   FlatList,
   Alert,
-  TouchableOpacity,
 } from "react-native";
 import globalStyles from "../styles/globalStyles";
 import {
@@ -15,7 +14,6 @@ import {
   SegmentedButtons,
 } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
-import { apiGet } from "../lib/http";
 import { storeData, getData } from "../lib/storage";
 import { ACTIONS, CREATE, UPDATE, DELETE } from "../lib/constants";
 import LogComponent from "../components/LogComponent";
@@ -30,7 +28,6 @@ const LogScreen = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const [scrollDirection, setScrollDirection] = useState("up");
-  const [loadMoreLoading, setLoadMoreLoading] = useState(false);
   const [segment, setSegment] = useState("All");
 
   useEffect(() => {
@@ -111,6 +108,9 @@ const LogScreen = ({ navigation, route }) => {
       link: "logs",
       successCallback: firebaseCallback,
       errorCallback: (error) => {
+        getData("logs").then((result) => {
+          dispatch({ type: "log/setLogState", payload: result || [] });
+        });
         setLoading(false);
         Alert.alert("Error", JSON.stringify(error));
       },
