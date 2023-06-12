@@ -31,7 +31,7 @@ const AuthScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [snackbar, setSnackbar] = useState(true);
+  const [snackbar, setSnackbar] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSignIn = (callback = () => {}) => {
@@ -53,7 +53,6 @@ const AuthScreen = ({ navigation }) => {
           const { code } = error;
           setErrorMessage(code);
           setSnackbar(true);
-
           // Alert.alert("Error", code);
         });
     } else {
@@ -98,8 +97,8 @@ const AuthScreen = ({ navigation }) => {
               setRefreshing(false);
             });
           } else {
-            setSnackbar(true);
             setErrorMessage("No internet");
+            setSnackbar(true);
           }
         });
       } else {
@@ -111,8 +110,8 @@ const AuthScreen = ({ navigation }) => {
   useEffect(() => {
     NetInfo.fetch().then((state) => {
       if (!state.isConnected) {
-        setSnackbar(true);
         setErrorMessage("No internet");
+        setSnackbar(true);
       }
     });
   }, []);
