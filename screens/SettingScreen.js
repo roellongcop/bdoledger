@@ -3,36 +3,37 @@ import {
   SafeAreaView,
   View,
   Text,
-  TextInput,
   RefreshControl,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Button } from "react-native-paper";
 import globalStyles from "../styles/globalStyles";
-import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
-import {
-  getAuth,
-  signOut
-} from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
+import ProfilePictureComponent from "../components/ProfilePictureComponent";
 
-const SettingScreen = ({ navigation, route }) => {
+const SettingScreen = () => {
   const auth = getAuth();
-  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.USER);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+  }, []);
 
   const onRefresh = () => {};
 
   const handleLogout = () => {
+    setLoading(true);
     signOut(auth)
       .then(() => {
-        console.log("User logged out successfully");
+        setLoading(false);
       })
       .catch((error) => {
-        console.log("Logout error:", error);
+        Alert.alert("Error", JSON.stringify(error));
+        setLoading(false);
       });
   };
 
@@ -44,16 +45,25 @@ const SettingScreen = ({ navigation, route }) => {
         }
       >
         <View style={globalStyles.container}>
+          <Text style={[globalStyles.title, { marginBottom: 10 }]}>
+            Account Details
+          </Text>
+          <ProfilePictureComponent w={100} h={100} />
+          <Text style={{ marginTop: 10 }}>ID: {user?.uid}</Text>
+          <Text>Email: {user?.email}</Text>
+          <Text>Name: {user?.displayName || "---"}</Text>
+        </View>
+        <View style={globalStyles.container}>
           <Button
             disabled={loading}
             loading={loading}
             labelStyle={{ color: "#fff" }}
             uppercase={true}
-            buttonColor="#1BC5BD"
+            buttonColor="#F64E60"
             style={{ width: "100%" }}
-            icon="content-save-check"
+            icon="logout"
             mode="contained"
-            onPress={() => handleLogout()}
+            onPress={handleLogout}
           >
             Logout
           </Button>

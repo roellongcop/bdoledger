@@ -7,7 +7,6 @@ import SettingScreen from "../screens/SettingScreen";
 import LogScreen from "../screens/LogScreen";
 import AuthScreen from "../screens/AuthScreen";
 
-import InternetBadgeComponent from "./InternetBadgeComponent";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useDispatch } from "react-redux";
@@ -16,6 +15,7 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import ProfilePictureComponent from "./ProfilePictureComponent";
 
 const AuthStackScreen = () => {
   return (
@@ -39,7 +39,7 @@ const HomeStackScreen = () => {
         component={HomeScreen}
         options={{
           title: "BDO Ledger",
-          headerRight: () => <InternetBadgeComponent />,
+          headerRight: () => <ProfilePictureComponent />,
         }}
       />
       <Stack.Screen
@@ -50,7 +50,7 @@ const HomeStackScreen = () => {
             route.params && route.params.customTitle
               ? route.params.customTitle
               : "Add Transaction",
-          headerRight: () => <InternetBadgeComponent />,
+          headerRight: () => <ProfilePictureComponent />,
         })}
       />
     </Stack.Navigator>
@@ -65,7 +65,7 @@ const SettingStackScreen = () => {
         component={SettingScreen}
         options={{
           title: "Setting",
-          headerRight: () => <InternetBadgeComponent />,
+          headerRight: () => <ProfilePictureComponent />,
         }}
       />
     </Stack.Navigator>
@@ -80,7 +80,7 @@ const LogStackScreen = () => {
         component={LogScreen}
         options={{
           title: "Transaction Logs",
-          headerRight: () => <InternetBadgeComponent />,
+          headerRight: () => <ProfilePictureComponent />,
         }}
       />
     </Stack.Navigator>
