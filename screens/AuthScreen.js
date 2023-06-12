@@ -18,7 +18,6 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { ALLOWED_EMAILS } from "../lib/constants";
 import { useDispatch } from "react-redux";
 import { getData, storeData } from "../lib/storage";
 import NetInfo from "@react-native-community/netinfo";
@@ -35,32 +34,25 @@ const AuthScreen = ({ navigation }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSignIn = (callback = () => {}) => {
-    if (ALLOWED_EMAILS.includes(email)) {
-      setLoading(true);
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          setLoading(false);
-          const user = userCredential.user || null;
+    setLoading(true);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        setLoading(false);
+        const user = userCredential.user || null;
 
-          dispatch({ type: "user/setUser", payload: user });
-          storeData("user", user);
-          storeData("userCredential", { email, password });
-          callback();
-        })
-        .catch((error) => {
-          callback();
-          setLoading(false);
-          const { code } = error;
-          setErrorMessage(code);
-          setSnackbar(true);
-          // Alert.alert("Error", code);
-        });
-    } else {
-      setErrorMessage("invalid Email");
-      setSnackbar(true);
-      // Alert.alert("Error", "invalid Email");
-      setLoading(false);
-    }
+        dispatch({ type: "user/setUser", payload: user });
+        storeData("user", user);
+        storeData("userCredential", { email, password });
+        callback();
+      })
+      .catch((error) => {
+        callback();
+        setLoading(false);
+        const { code } = error;
+        setErrorMessage(code);
+        setSnackbar(true);
+        // Alert.alert("Error", code);
+      });
   };
 
   // Function to handle email/password sign-up

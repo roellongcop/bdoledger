@@ -4,7 +4,6 @@ import { Button } from "react-native-paper";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import authStyles from "../styles/authStyles";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-import { ALLOWED_EMAILS } from "../lib/constants";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const auth = getAuth();
@@ -16,22 +15,17 @@ const ForgotPasswordScreen = ({ navigation }) => {
   };
 
   const handleResetPassword = () => {
-    if (ALLOWED_EMAILS.includes(email)) {
-      setLoading(true);
-      sendPasswordResetEmail(auth, email)
-        .then(() => {
-          setLoading(false);
-          Alert.alert("Success", "Password reset email sent");
-        })
-        .catch((error) => {
-          setLoading(false);
-          const { code } = error;
-          Alert.alert("Error", code);
-        });
-    } else {
-      setLoading(false);
-      Alert.alert("Error", "invalid Email");
-    }
+    setLoading(true);
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        setLoading(false);
+        Alert.alert("Success", "Password reset email sent");
+      })
+      .catch((error) => {
+        setLoading(false);
+        const { code } = error;
+        Alert.alert("Error", code);
+      });
   };
 
   return (
